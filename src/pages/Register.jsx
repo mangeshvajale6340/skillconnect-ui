@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../api";
 
 function Register() {
   const [fullName, setFullName] = useState("");
@@ -12,15 +12,13 @@ function Register() {
     e.preventDefault();
 
     try {
-      await api.post("/api/Auth/register", ...)
-        {
-          fullName,
-          email,
-          password,
-          phoneNumber,
-          role,
-        }
-      );
+      await api.post("/api/Auth/register", {
+        fullName,
+        email,
+        password,
+        phoneNumber,
+        role,
+      });
 
       alert("Registration Successful");
     } catch (error) {
