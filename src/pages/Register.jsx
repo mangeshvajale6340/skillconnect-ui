@@ -12,8 +12,7 @@ function Register() {
     e.preventDefault();
 
     try {
-      await axios.post(
-        "http://localhost:5000/api/Auth/register",
+      await api.post("/api/Auth/register", ...)
         {
           fullName,
           email,
