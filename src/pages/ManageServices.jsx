@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api";
 import Navbar from "../components/Navbar";
 
 function ManageServices() {
@@ -16,8 +16,8 @@ function ManageServices() {
 
             const token = localStorage.getItem("token");
 
-            const response = await axios.get(
-                "http://localhost:5000/api/Admin/services",
+            const response = await api.get(
+                "/api/Admin/services",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -45,8 +45,8 @@ function ManageServices() {
 
             const token = localStorage.getItem("token");
 
-            await axios.delete(
-                `http://localhost:5000/api/Admin/services/${id}`,
+            await api.delete(
+                `/api/Admin/services/${id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -80,52 +80,42 @@ function ManageServices() {
                     <thead>
 
                         <tr>
-
                             <th>ID</th>
                             <th>Title</th>
                             <th>Category</th>
                             <th>Price</th>
                             <th>Provider</th>
                             <th>Action</th>
-
                         </tr>
 
                     </thead>
 
                     <tbody>
 
-                        {
-                            services.map(service => (
+                        {services.map(service => (
 
-                                <tr key={service.id}>
+                            <tr key={service.id}>
 
-                                    <td>{service.id}</td>
+                                <td>{service.id}</td>
+                                <td>{service.title}</td>
+                                <td>{service.category}</td>
+                                <td>₹{service.price}</td>
+                                <td>{service.provider}</td>
 
-                                    <td>{service.title}</td>
+                                <td>
 
-                                    <td>{service.category}</td>
+                                    <button
+                                        className="btn btn-danger btn-sm"
+                                        onClick={() => deleteService(service.id)}
+                                    >
+                                        Delete
+                                    </button>
 
-                                    <td>₹{service.price}</td>
+                                </td>
 
-                                    <td>{service.provider}</td>
+                            </tr>
 
-                                    <td>
-
-                                        <button
-                                            className="btn btn-danger btn-sm"
-                                            onClick={() =>
-                                                deleteService(service.id)
-                                            }
-                                        >
-                                            Delete
-                                        </button>
-
-                                    </td>
-
-                                </tr>
-
-                            ))
-                        }
+                        ))}
 
                     </tbody>
 

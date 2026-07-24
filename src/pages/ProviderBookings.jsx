@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api";
 import Navbar from "../components/Navbar";
 
 function ProviderBookings() {
@@ -16,8 +16,8 @@ function ProviderBookings() {
 
             const token = localStorage.getItem("token");
 
-            const response = await axios.get(
-                "http://localhost:5000/api/Bookings/provider",
+            const response = await api.get(
+                "/api/Bookings/provider",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -38,63 +38,63 @@ function ProviderBookings() {
 
     const approveBooking = async (id) => {
 
-    try {
+        try {
 
-        const token = localStorage.getItem("token");
+            const token = localStorage.getItem("token");
 
-        await axios.put(
-            `http://localhost:5000/api/Bookings/${id}/approve`,
-            {},
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
+            await api.put(
+                `/api/Bookings/${id}/approve`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
                 }
-            }
-        );
+            );
 
-        alert("Booking Approved Successfully");
+            alert("Booking Approved Successfully");
 
-        loadBookings();
+            loadBookings();
 
-    } catch (error) {
+        } catch (error) {
 
-        console.log(error);
+            console.log(error);
 
-        alert("Approval Failed");
+            alert("Approval Failed");
 
-    }
+        }
 
-};
+    };
 
-const rejectBooking = async (id) => {
+    const rejectBooking = async (id) => {
 
-    try {
+        try {
 
-        const token = localStorage.getItem("token");
+            const token = localStorage.getItem("token");
 
-        await axios.put(
-            `http://localhost:5000/api/Bookings/${id}/reject`,
-            {},
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
+            await api.put(
+                `/api/Bookings/${id}/reject`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
                 }
-            }
-        );
+            );
 
-        alert("Booking Rejected Successfully");
+            alert("Booking Rejected Successfully");
 
-        loadBookings();
+            loadBookings();
 
-    } catch (error) {
+        } catch (error) {
 
-        console.log(error);
+            console.log(error);
 
-        alert("Reject Failed");
+            alert("Reject Failed");
 
-    }
+        }
 
-};
+    };
 
     return (
         <>
@@ -124,65 +124,56 @@ const rejectBooking = async (id) => {
 
                     <tbody>
 
-                        {
-                            bookings.map((booking) => (
+                        {bookings.map((booking) => (
 
-                                <tr key={booking.bookingId}>
+                            <tr key={booking.bookingId}>
 
-                                    <td>{booking.customerName}</td>
+                                <td>{booking.customerName}</td>
+                                <td>{booking.customerEmail}</td>
+                                <td>{booking.customerPhone}</td>
+                                <td>{booking.serviceTitle}</td>
+                                <td>{booking.category}</td>
+                                <td>₹{booking.price}</td>
 
-                                    <td>{booking.customerEmail}</td>
+                                <td>
+                                    {new Date(booking.bookingDate).toLocaleDateString()}
+                                </td>
 
-                                    <td>{booking.customerPhone}</td>
+                                <td>{booking.status}</td>
 
-                                    <td>{booking.serviceTitle}</td>
+                                <td>
 
-                                    <td>{booking.category}</td>
+                                    {booking.status === "Pending" ? (
 
-                                    <td>₹{booking.price}</td>
+                                        <>
+                                            <button
+                                                className="btn btn-success btn-sm me-2"
+                                                onClick={() => approveBooking(booking.bookingId)}
+                                            >
+                                                Approve
+                                            </button>
 
-                                    <td>
-                                        {
-                                            new Date(booking.bookingDate)
-                                                .toLocaleDateString()
-                                        }
-                                    </td>
+                                            <button
+                                                className="btn btn-danger btn-sm"
+                                                onClick={() => rejectBooking(booking.bookingId)}
+                                            >
+                                                Reject
+                                            </button>
+                                        </>
 
-                                    <td>{booking.status}</td>
-<td>
+                                    ) : (
 
-    {booking.status === "Pending" ? (
+                                        <span className="badge bg-secondary">
+                                            {booking.status}
+                                        </span>
 
-        <>
-            <button
-                className="btn btn-success btn-sm me-2"
-                onClick={() => approveBooking(booking.bookingId)}
-            >
-                Approve
-            </button>
+                                    )}
 
-            <button
-                className="btn btn-danger btn-sm"
-                onClick={() => rejectBooking(booking.bookingId)}
-            >
-                Reject
-            </button>
-        </>
+                                </td>
 
-    ) : (
+                            </tr>
 
-        <span className="badge bg-secondary">
-            {booking.status}
-        </span>
-
-    )}
-
-</td>
-
-                                </tr>
-
-                            ))
-                        }
+                        ))}
 
                     </tbody>
 

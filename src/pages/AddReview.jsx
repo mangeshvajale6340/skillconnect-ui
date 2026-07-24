@@ -1,20 +1,19 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../api";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
-
 
 function AddReview() {
 
     const params = useParams();
 
     console.log("Params:", params);
-
     console.log("ServiceId:", params.serviceId);
 
     const serviceId = Number(params.serviceId);
 
     console.log("Number ServiceId:", serviceId);
+
     const navigate = useNavigate();
 
     const [rating, setRating] = useState(5);
@@ -27,14 +26,15 @@ function AddReview() {
         try {
 
             const token = localStorage.getItem("token");
-            console.log({
-    serviceId: Number(serviceId),
-    rating,
-    comment
-});
 
-            await axios.post(
-                "http://localhost:5000/api/Reviews",
+            console.log({
+                serviceId: Number(serviceId),
+                rating,
+                comment
+            });
+
+            await api.post(
+                "/api/Reviews",
                 {
                     serviceId: Number(serviceId),
                     rating,
@@ -53,15 +53,13 @@ function AddReview() {
 
         } catch (error) {
 
-    console.log(error);
+            console.log(error);
+            console.log(error.response);
+            console.log(error.response?.data);
 
-    console.log(error.response);
+            alert("Failed to Add Review");
 
-    console.log(error.response.data);
-
-    alert("Failed to Add Review");
-
-}
+        }
 
     };
 
@@ -112,9 +110,7 @@ function AddReview() {
 
                         </div>
 
-                        <button
-                            className="btn btn-success"
-                        >
+                        <button className="btn btn-success">
                             Submit Review
                         </button>
 

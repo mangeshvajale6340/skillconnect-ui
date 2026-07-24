@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api";
 import Navbar from "../components/Navbar";
 
 function ProviderDashboard() {
@@ -16,8 +16,8 @@ function ProviderDashboard() {
 
             const token = localStorage.getItem("token");
 
-            const response = await axios.get(
-                "http://localhost:5000/api/Dashboard/provider",
+            const response = await api.get(
+                "/api/Dashboard/provider",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -27,8 +27,7 @@ function ProviderDashboard() {
 
             setDashboard(response.data);
 
-        }
-        catch (error) {
+        } catch (error) {
 
             console.log(error);
 

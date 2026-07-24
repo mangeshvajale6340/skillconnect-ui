@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
@@ -26,9 +26,7 @@ function EditService() {
 
         try {
 
-            const response = await axios.get(
-                `http://localhost:5000/api/Services/${id}`
-            );
+            const response = await api.get(`/api/Services/${id}`);
 
             setTitle(response.data.title);
             setDescription(response.data.description);
@@ -36,8 +34,7 @@ function EditService() {
             setCategory(response.data.category);
             setCurrentImage(response.data.imageUrl);
 
-        }
-        catch (error) {
+        } catch (error) {
 
             console.log(error);
 
@@ -62,25 +59,20 @@ function EditService() {
             formData.append("price", price);
             formData.append("category", category);
 
-            if (image != null) {
-
+            if (image) {
                 formData.append("image", image);
-
             }
 
-            await axios.put(
+            await api.put(
 
-                `http://localhost:5000/api/Services/${id}`,
+                `/api/Services/${id}`,
 
                 formData,
 
                 {
                     headers: {
-
                         Authorization: `Bearer ${token}`,
-
                         "Content-Type": "multipart/form-data"
-
                     }
                 }
 
@@ -90,8 +82,7 @@ function EditService() {
 
             navigate("/my-services");
 
-        }
-        catch (error) {
+        } catch (error) {
 
             console.log(error);
 
@@ -121,9 +112,7 @@ function EditService() {
                             <input
                                 className="form-control"
                                 value={title}
-                                onChange={(e) =>
-                                    setTitle(e.target.value)
-                                }
+                                onChange={(e) => setTitle(e.target.value)}
                             />
 
                         </div>
@@ -136,9 +125,7 @@ function EditService() {
                                 className="form-control"
                                 rows="4"
                                 value={description}
-                                onChange={(e) =>
-                                    setDescription(e.target.value)
-                                }
+                                onChange={(e) => setDescription(e.target.value)}
                             />
 
                         </div>
@@ -151,9 +138,7 @@ function EditService() {
                                 type="number"
                                 className="form-control"
                                 value={price}
-                                onChange={(e) =>
-                                    setPrice(e.target.value)
-                                }
+                                onChange={(e) => setPrice(e.target.value)}
                             />
 
                         </div>
@@ -165,37 +150,33 @@ function EditService() {
                             <input
                                 className="form-control"
                                 value={category}
-                                onChange={(e) =>
-                                    setCategory(e.target.value)
-                                }
+                                onChange={(e) => setCategory(e.target.value)}
                             />
 
                         </div>
 
-                        {
-                            currentImage && (
+                        {currentImage && (
 
-                                <div className="mb-3">
+                            <div className="mb-3">
 
-                                    <label>Current Image</label>
+                                <label>Current Image</label>
 
-                                    <br />
+                                <br />
 
-                                    <img
-                                        src={`http://localhost:5000/uploads/${currentImage}`}
-                                        alt="Service"
-                                        className="img-thumbnail"
-                                        style={{
-                                            width: "250px",
-                                            height: "180px",
-                                            objectFit: "cover"
-                                        }}
-                                    />
+                                <img
+                                    src={`${import.meta.env.VITE_API_URL}/uploads/${currentImage}`}
+                                    alt="Service"
+                                    className="img-thumbnail"
+                                    style={{
+                                        width: "250px",
+                                        height: "180px",
+                                        objectFit: "cover"
+                                    }}
+                                />
 
-                                </div>
+                            </div>
 
-                            )
-                        }
+                        )}
 
                         <div className="mb-3">
 
@@ -204,16 +185,12 @@ function EditService() {
                             <input
                                 type="file"
                                 className="form-control"
-                                onChange={(e) =>
-                                    setImage(e.target.files[0])
-                                }
+                                onChange={(e) => setImage(e.target.files[0])}
                             />
 
                         </div>
 
-                        <button
-                            className="btn btn-primary"
-                        >
+                        <button className="btn btn-primary">
                             Update Service
                         </button>
 

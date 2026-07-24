@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../api";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
@@ -28,12 +28,12 @@ function CreateService() {
             formData.append("price", price);
             formData.append("category", category);
 
-            if (image != null) {
+            if (image) {
                 formData.append("image", image);
             }
 
-            await axios.post(
-                "http://localhost:5000/api/Services",
+            await api.post(
+                "/api/Services",
                 formData,
                 {
                     headers: {
@@ -132,9 +132,7 @@ function CreateService() {
                         </div>
 
                         <button className="btn btn-success">
-
                             Create Service
-
                         </button>
 
                     </form>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api";
 import Navbar from "../components/Navbar";
 
 function AdminDashboard() {
@@ -16,8 +16,8 @@ function AdminDashboard() {
 
             const token = localStorage.getItem("token");
 
-            const response = await axios.get(
-                "http://localhost:5000/api/Admin/dashboard",
+            const response = await api.get(
+                "/api/Admin/dashboard",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -88,8 +88,10 @@ function AdminDashboard() {
                 </div>
 
             </div>
+
         </>
     );
+
 }
 
 export default AdminDashboard;

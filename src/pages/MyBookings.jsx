@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
@@ -19,8 +19,8 @@ function MyBookings() {
 
             const token = localStorage.getItem("token");
 
-            const response = await axios.get(
-                "http://localhost:5000/api/Bookings/my",
+            const response = await api.get(
+                "/api/Bookings/my",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -67,55 +67,48 @@ function MyBookings() {
 
                     <tbody>
 
-                        {
-                            bookings.map((booking) => (
+                        {bookings.map((booking) => (
 
-                                <tr key={booking.bookingId}>
+                            <tr key={booking.bookingId}>
 
-                                    <td>{booking.serviceTitle}</td>
+                                <td>{booking.serviceTitle}</td>
 
-                                    <td>{booking.category}</td>
+                                <td>{booking.category}</td>
 
-                                    <td>₹{booking.price}</td>
+                                <td>₹{booking.price}</td>
 
-                                    <td>
-                                        {
-                                            new Date(booking.bookingDate)
-                                                .toLocaleDateString()
-                                        }
-                                    </td>
+                                <td>
+                                    {new Date(booking.bookingDate).toLocaleDateString()}
+                                </td>
 
-                                    <td>{booking.status}</td>
+                                <td>{booking.status}</td>
 
-                                    <td>
+                                <td>
 
-                                        {
-                                            booking.status === "Approved" ? (
+                                    {booking.status === "Approved" ? (
 
-                                                <button
-                                                    className="btn btn-primary btn-sm"
-                                                    onClick={() =>
-                                                        navigate(`/add-review/${booking.serviceId}`)
-                                                    }
-                                                >
-                                                    Add Review
-                                                </button>
+                                        <button
+                                            className="btn btn-primary btn-sm"
+                                            onClick={() =>
+                                                navigate(`/add-review/${booking.serviceId}`)
+                                            }
+                                        >
+                                            Add Review
+                                        </button>
 
-                                            ) : (
+                                    ) : (
 
-                                                <span className="text-muted">
-                                                    --
-                                                </span>
+                                        <span className="text-muted">
+                                            --
+                                        </span>
 
-                                            )
-                                        }
+                                    )}
 
-                                    </td>
+                                </td>
 
-                                </tr>
+                            </tr>
 
-                            ))
-                        }
+                        ))}
 
                     </tbody>
 
