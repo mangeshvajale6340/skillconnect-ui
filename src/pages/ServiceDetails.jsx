@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api";
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
@@ -21,37 +21,55 @@ function ServiceDetails() {
 
     const loadService = async () => {
 
-        const response = await axios.get(
-            `http://localhost:5000/api/Services/${id}`
-        );
+        try {
 
-        setService(response.data);
+            const response = await api.get(`/api/Services/${id}`);
+
+            setService(response.data);
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
 
     };
 
     const loadReviews = async () => {
 
-        const response = await axios.get(
-            `http://localhost:5000/api/Reviews/service/${id}`
-        );
+        try {
 
-        setReviews(response.data);
+            const response = await api.get(
+                `/api/Reviews/service/${id}`
+            );
+
+            setReviews(response.data);
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
 
     };
 
     const loadRating = async () => {
 
-        const response = await axios.get(
-            `http://localhost:5000/api/Reviews/service/${id}/rating`
-        );
+        try {
 
-        setRating(response.data);
+            const response = await api.get(
+                `/api/Reviews/service/${id}/rating`
+            );
+
+            setRating(response.data);
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
 
     };
-
-    // ===========================
-    // Book Service
-    // ===========================
 
     const bookService = async () => {
 
@@ -62,14 +80,13 @@ function ServiceDetails() {
             if (!token) {
 
                 alert("Please Login First");
-
                 return;
 
             }
 
-            await axios.post(
+            await api.post(
 
-                "http://localhost:5000/api/Bookings",
+                "/api/Bookings",
 
                 {
                     serviceId: Number(id)
@@ -85,8 +102,7 @@ function ServiceDetails() {
 
             alert("Service Booked Successfully");
 
-        }
-        catch (error) {
+        } catch (error) {
 
             console.log(error);
 
@@ -94,8 +110,7 @@ function ServiceDetails() {
 
                 alert(error.response.data);
 
-            }
-            else {
+            } else {
 
                 alert("Booking Failed");
 
@@ -121,7 +136,7 @@ function ServiceDetails() {
                         service.imageUrl && (
 
                             <img
-                                src={`http://localhost:5000/uploads/${service.imageUrl}`}
+                                src={`https://skillconnectapi.onrender.com/uploads/${service.imageUrl}`}
                                 alt={service.title}
                                 className="img-fluid rounded mb-3"
                                 style={{
@@ -140,13 +155,8 @@ function ServiceDetails() {
                     <h4>₹ {service.price}</h4>
 
                     <p>
-
-                        <strong>Category :</strong>
-
-                        {" "}
-
+                        <strong>Category :</strong>{" "}
                         {service.category}
-
                     </p>
 
                     <button
@@ -159,35 +169,21 @@ function ServiceDetails() {
                     <hr />
 
                     <h4>
-
-                        ⭐ Average Rating :
-
+                        ⭐ Average Rating :{" "}
                         {
-
                             rating
-
                                 ? rating.averageRating.toFixed(1)
-
                                 : "0.0"
-
                         }
-
                     </h4>
 
                     <p>
-
-                        Total Reviews :
-
+                        Total Reviews :{" "}
                         {
-
                             rating
-
                                 ? rating.totalReviews
-
                                 : 0
-
                         }
-
                     </p>
 
                     <hr />
@@ -195,14 +191,11 @@ function ServiceDetails() {
                     <h3>Customer Reviews</h3>
 
                     {
-
-                        reviews.length === 0
-
-                            ?
+                        reviews.length === 0 ? (
 
                             <p>No Reviews Yet</p>
 
-                            :
+                        ) : (
 
                             reviews.map((review, index) => (
 
@@ -211,40 +204,23 @@ function ServiceDetails() {
                                     className="border rounded p-3 mb-3"
                                 >
 
-                                    <h5>
+                                    <h5>{review.customer}</h5>
 
-                                        {review.customer}
+                                    <h6>⭐ {review.rating}/5</h6>
 
-                                    </h5>
-
-                                    <h6>
-
-                                        ⭐ {review.rating}/5
-
-                                    </h6>
-
-                                    <p>
-
-                                        {review.comment}
-
-                                    </p>
+                                    <p>{review.comment}</p>
 
                                     <small>
-
-                                        {
-
-                                            new Date(
-                                                review.createdAt
-                                            ).toLocaleDateString()
-
-                                        }
-
+                                        {new Date(
+                                            review.createdAt
+                                        ).toLocaleDateString()}
                                     </small>
 
                                 </div>
 
                             ))
 
+                        )
                     }
 
                 </div>

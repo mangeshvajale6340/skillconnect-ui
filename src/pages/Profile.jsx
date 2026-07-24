@@ -1,62 +1,69 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api";
 import Navbar from "../components/Navbar";
 
 function Profile() {
-  const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    getProfile();
-  }, []);
+    const [user, setUser] = useState(null);
 
-  const getProfile = async () => {
-    try {
-      const token =
-        localStorage.getItem("token");
+    useEffect(() => {
+        getProfile();
+    }, []);
 
-      const response = await axios.get(
-        "http://localhost:5000/api/Auth/profile",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+    const getProfile = async () => {
+
+        try {
+
+            const token = localStorage.getItem("token");
+
+            const response = await api.get(
+                "/api/Auth/profile",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            setUser(response.data);
+
+        } catch (error) {
+
+            console.log(error);
+
         }
-      );
 
-      setUser(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    };
 
-  return (
-    <>
-      <Navbar />
+    return (
+        <>
+            <Navbar />
 
-      <div className="container mt-5">
+            <div className="container mt-5">
 
-        <h2>My Profile</h2>
+                <h2>My Profile</h2>
 
-        {user && (
-          <div className="card p-3">
+                {
+                    user && (
 
-            <h5>{user.fullName}</h5>
+                        <div className="card p-3">
 
-            <p>Email: {user.email}</p>
+                            <h5>{user.fullName}</h5>
 
-            <p>
-              Phone:
-              {user.phoneNumber}
-            </p>
+                            <p>Email: {user.email}</p>
 
-            <p>Role: {user.role}</p>
+                            <p>Phone: {user.phoneNumber}</p>
 
-          </div>
-        )}
+                            <p>Role: {user.role}</p>
 
-      </div>
-    </>
-  );
+                        </div>
+
+                    )
+                }
+
+            </div>
+        </>
+    );
 }
 
 export default Profile;

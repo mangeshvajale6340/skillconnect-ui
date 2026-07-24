@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api";
 import Navbar from "../components/Navbar";
 
 function CustomerDashboard() {
@@ -12,18 +12,26 @@ function CustomerDashboard() {
 
     const loadDashboard = async () => {
 
-        const token = localStorage.getItem("token");
+        try {
 
-        const response = await axios.get(
-            "http://localhost:5000/api/Dashboard/customer",
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
+            const token = localStorage.getItem("token");
+
+            const response = await api.get(
+                "/api/Dashboard/customer",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
                 }
-            }
-        );
+            );
 
-        setDashboard(response.data);
+            setDashboard(response.data);
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
 
     };
 
